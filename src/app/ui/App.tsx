@@ -1,8 +1,10 @@
-import { Routing } from "@/common/routing/Routing";
+import { Header } from "@/common/components";
+import { Routing } from "@/common/routing";
 
 function App() {
   return (
     <>
+      <Header />
       <Routing />
     </>
   );
