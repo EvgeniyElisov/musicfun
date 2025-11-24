@@ -1,30 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "@/app/api/baseApi";
 import type {
-  PlaylistsResponse,
-  FetchPlaylistsArgs,
-  PlaylistData,
-  CreatePlaylistArgs,
-  UpdatePlaylistArgs,
+    CreatePlaylistArgs,
+    FetchPlaylistsArgs,
+    PlaylistData,
+    PlaylistsResponse,
+    UpdatePlaylistArgs,
 } from "./playlistsApi.types";
 
-export const playlistsApi = createApi({
-  reducerPath: "playlistsApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    headers: {
-      "API-KEY": import.meta.env.VITE_API_KEY,
-    },
-    prepareHeaders: (headers) => {
-      headers.set(
-        "Authorization",
-        `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
-      );
-      return headers;
-    },
-  }),
+export const playlistsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs>({
       query: () => "playlists",
+      providesTags: ["Playlist"],
       //   query: () => {
       //     return {
       //       method: "get",
@@ -38,19 +25,22 @@ export const playlistsApi = createApi({
         method: "post",
         body,
       }),
+      invalidatesTags: ["Playlist"],
     }),
     deletePlaylist: build.mutation<void, string>({
       query: (playlistId) => ({
         url: `playlists/${playlistId}`,
         method: "delete",
       }),
+      invalidatesTags: ["Playlist"],
     }),
-    updatePlaylist: build.mutation<void,{ playlistId: string; body: UpdatePlaylistArgs}>({
+    updatePlaylist: build.mutation<void,{ playlistId: string; body: UpdatePlaylistArgs }>({
       query: ({ playlistId, body }) => ({
         url: `playlists/${playlistId}`,
         method: "put",
         body,
       }),
+      invalidatesTags: ["Playlist"],
     }),
   }),
 });
@@ -59,5 +49,5 @@ export const {
   useFetchPlaylistsQuery,
   useCreatePlaylistMutation,
   useDeletePlaylistMutation,
-  useUpdatePlaylistMutation
+  useUpdatePlaylistMutation,
 } = playlistsApi;
