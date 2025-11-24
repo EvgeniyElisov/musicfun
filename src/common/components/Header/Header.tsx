@@ -1,5 +1,5 @@
+import { Path } from "@/common/routing";
 import { NavLink } from "react-router";
-import { Path } from "@/common/routing/Routing";
 import s from "./Header.module.css";
 
 const navItems = [

@@ -1,13 +1,14 @@
 import { Header } from "@/common/components";
 import { Routing } from "@/common/routing";
+import s from "./App.module.css";
 
-function App() {
+export const App = () => {
   return (
     <>
       <Header />
-      <Routing />
+      <div className={s.layout}>
+        <Routing />
+      </div>
     </>
   );
-}
-
-export default App;
+};
