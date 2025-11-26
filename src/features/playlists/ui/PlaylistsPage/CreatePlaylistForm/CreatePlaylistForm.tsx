@@ -7,9 +7,11 @@ export const CreatePlaylistForm = () => {
   const [createPlaylist] = useCreatePlaylistMutation();
 
   const onSubmit: SubmitHandler<CreatePlaylistArgs> = (data) => {
-    createPlaylist(data).then(() => {
-      reset();
-    });
+    createPlaylist(data)
+      .unwrap()
+      .then(() => {
+        reset();
+      });
   };
 
   return (
