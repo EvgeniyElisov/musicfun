@@ -34,15 +34,13 @@ export const EditPlaylistForm = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Edit playlist</h2>
       <div>
-        <input {...register("title")} placeholder={"title"} />
+        <input {...register("title")} placeholder={"Название"} />
       </div>
       <div>
-        <input {...register("description")} placeholder={"description"} />
+        <input {...register("description")} placeholder={"Описание"} />
       </div>
-      <button type={"submit"}>save</button>
-      <button type={"button"} onClick={() => editPlaylist(null)}>
-        cancel
-      </button>
+      <button type={"submit"}>Сохранить</button>
+      <button type={"button"} onClick={() => editPlaylist(null)}>Отмена</button>
     </form>
   );
 };

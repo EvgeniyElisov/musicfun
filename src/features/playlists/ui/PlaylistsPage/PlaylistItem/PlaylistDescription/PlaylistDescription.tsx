@@ -7,9 +7,9 @@ type Props = {
 export const PlaylistDescription = ({ attributes }: Props) => {
   return (
     <>
-      <div>title: {attributes.title}</div>
-      <div>description: {attributes.description}</div>
-      <div>userName: {attributes.user.name}</div>
+      <div>Название: {attributes.title}</div>
+      <div>Описание: {attributes.description}</div>
+      <div>Юзер: {attributes.user.name}</div>
     </>
   )
 }
