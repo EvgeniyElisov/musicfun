@@ -8,13 +8,7 @@ type Props = {
   threshold?: number;
 };
 
-export const useInfiniteScroll = ({
-  hasNextPage,
-  isFetching,
-  fetchNextPage,
-  rootMargin = "100px",
-  threshold = 0.1,
-}: Props) => {
+export const useInfiniteScroll = ({hasNextPage, isFetching, fetchNextPage, rootMargin = "100px", threshold = 0.1,}: Props) => {
   const observerRef = useRef<HTMLDivElement>(null);
 
   const loadMoreHandler = useCallback(() => {
