@@ -29,10 +29,7 @@ export const playlistsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Playlist"],
     }),
-    updatePlaylist: build.mutation<
-      void,
-      { playlistId: string; body: UpdatePlaylistArgs }
-    >({
+    updatePlaylist: build.mutation<void,{ playlistId: string; body: UpdatePlaylistArgs }>({
       query: ({ playlistId, body }) => ({
         url: `playlists/${playlistId}`,
         method: "put",
@@ -40,10 +37,7 @@ export const playlistsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Playlist"],
     }),
-    uploadPlaylistCover: build.mutation<
-      Images,
-      { playlistId: string; file: File }
-    >({
+    uploadPlaylistCover: build.mutation<Images,{ playlistId: string; file: File }>({
       query: ({ playlistId, file }) => {
         const formData = new FormData();
         formData.append("file", file);
