@@ -1,22 +1,47 @@
-import { baseApi } from "@/app/api/baseApi"
-import type { FetchTracksResponse } from "./tracksApi.types"
+import { baseApi } from "@/app/api/baseApi";
+import type { FetchTracksResponse } from "./tracksApi.types";
 
 export const tracksApi = baseApi.injectEndpoints({
-  endpoints: build => ({
-    fetchTracks: build.infiniteQuery<FetchTracksResponse, void, string | null>({
+  endpoints: (build) => ({
+    fetchTracks: build.infiniteQuery<FetchTracksResponse, void, number>({
       infiniteQueryOptions: {
-        initialPageParam: null, // начальное значение cursor
-        getNextPageParam: lastPage => {
-          return lastPage.meta.nextCursor || null
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+          return lastPageParam < (lastPage.meta as { pagesCount: number }).pagesCount
+            ? lastPageParam + 1
+            : undefined
         },
       },
-      query: ({ pageParam }) => { // сюда попадает nextCursor из 10 строки
+      query: ({ pageParam }) => {
         return {
           url: 'playlists/tracks',
-          params: { cursor: pageParam, pageSize: 5, paginationType: 'cursor' },
+          params: { pageNumber: pageParam, pageSize: 10, paginationType: 'offset' },
         }
       },
     }),
+    // Offset pagination
+    
+    // fetchTracks: build.infiniteQuery<FetchTracksResponse, void, number>({
+    //   infiniteQueryOptions: {
+    //     initialPageParam: 1,
+    //     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+    //       return lastPageParam <
+    //         (lastPage.meta as { pagesCount: number }).pagesCount
+    //         ? lastPageParam + 1
+    //         : undefined;
+    //     },
+    //   },
+    //   query: ({ pageParam }) => {
+    //     return {
+    //       url: "playlists/tracks",
+    //       params: {
+    //         pageNumber: pageParam,
+    //         pageSize: 10,
+    //         paginationType: "offset",
+    //       },
+    //     };
+    //   },
+    // }),
   }),
-})
-export const { useFetchTracksInfiniteQuery } = tracksApi
+});
+export const { useFetchTracksInfiniteQuery } = tracksApi;
