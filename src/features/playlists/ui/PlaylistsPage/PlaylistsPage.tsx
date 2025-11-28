@@ -1,36 +1,35 @@
 import { Pagination } from "@/common/components";
 import { useDebounceValue } from "@/common/hooks";
 import { useState, type ChangeEvent } from "react";
-import {
-  useFetchPlaylistsQuery
-} from "../../api/playlistsApi";
+import { useFetchPlaylistsQuery } from "../../api/playlistsApi";
 import { CreatePlaylistForm } from "./CreatePlaylistForm";
 import { PlaylistsList } from "./PlaylistsList";
 import s from "./PlaylistsPage.module.css";
 
 export const PlaylistsPage = () => {
-
   const [search, setSearch] = useState("");
   const debounceSearch = useDebounceValue(search);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
-  const { data, isLoading } = useFetchPlaylistsQuery({
-    search: debounceSearch,
-    pageNumber: currentPage,
-    pageSize,
-  });
- 
+  const { data, isLoading } = useFetchPlaylistsQuery(
+    {
+      search: debounceSearch,
+      pageNumber: currentPage,
+      pageSize,
+    },
+  );
+
   const changePageSizeHandler = (size: number) => {
     setPageSize(size);
     setCurrentPage(1);
   };
 
   const searchPlaylistHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value)
-    setCurrentPage(1)
-  }
+    setSearch(e.currentTarget.value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className={s.container}>
@@ -41,7 +40,10 @@ export const PlaylistsPage = () => {
         placeholder={"Поиск плейлиста по названию"}
         onChange={searchPlaylistHandler}
       />
-     <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading}/>
+      <PlaylistsList
+        playlists={data?.data || []}
+        isPlaylistsLoading={isLoading}
+      />
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
