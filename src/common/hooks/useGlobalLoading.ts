@@ -14,9 +14,10 @@ export const useGlobalLoading = () => {
     // Получаем все активные запросы из RTK Query API
     const queries = Object.values(state.baseApi.queries || {})
     const mutations = Object.values(state.baseApi.mutations || {})
- 
+
     const hasActiveQueries = queries.some(query => {
       if (query?.status !== 'pending') return
+      
       if (excludedEndpoints.includes(query.endpointName)) {
         const completedQueries = queries.filter(q => q?.status === 'fulfilled')
         return completedQueries.length > 0

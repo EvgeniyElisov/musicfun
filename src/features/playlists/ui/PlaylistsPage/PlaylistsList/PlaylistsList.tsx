@@ -12,9 +12,10 @@ import { useState } from "react";
 type Props = {
   playlists: PlaylistData[];
   isPlaylistsLoading: boolean;
+  setCurrentPage: (page: number) => void
 };
 
-export const PlaylistsList = ({ playlists, isPlaylistsLoading }: Props) => {
+export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }: Props) => {
   const [playlistId, setPlaylistId] = useState<string | null>(null);
 
   const [deletePlaylist] = useDeletePlaylistMutation();
@@ -22,7 +23,7 @@ export const PlaylistsList = ({ playlists, isPlaylistsLoading }: Props) => {
 
   const deletePlaylistHandler = (playlistId: string) => {
     if (confirm("Вы уверены, что хотите удалить плейлист?")) {
-      deletePlaylist(playlistId);
+      deletePlaylist(playlistId).unwrap().then(() => setCurrentPage(1));
     }
   };
 

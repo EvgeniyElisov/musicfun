@@ -4,11 +4,14 @@ type Props = {
 };
 
 export const PageSizeSelector = ({ pageSize, changePageSize }: Props) => {
+
+  const sizes = [2, 4, 8, 16, 32]
+
   return (
     <label>
       Показывать по
       <select name={"select-page-size"} value={pageSize} onChange={(e) => changePageSize(Number(e.target.value))}>
-        {[2, 4, 8, 16, 32].map((size) => (
+        {sizes.map((size) => (
           <option value={size} key={size}>{size}</option>
         ))}
       </select>

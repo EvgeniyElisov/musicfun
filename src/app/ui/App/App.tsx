@@ -7,7 +7,7 @@ import { LinearProgress } from "@/common/components/LinearProgress";
 
 export const App = () => {
   const isGlobalLoading = useGlobalLoading();
-
+  
   return (
     <>
       <Header />

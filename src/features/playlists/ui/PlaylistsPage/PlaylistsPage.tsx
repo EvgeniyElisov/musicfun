@@ -5,7 +5,6 @@ import { useFetchPlaylistsQuery } from "../../api/playlistsApi";
 import { CreatePlaylistForm } from "./CreatePlaylistForm";
 import { PlaylistsList } from "./PlaylistsList";
 import s from "./PlaylistsPage.module.css";
-import { LinearProgress } from "@/common/components/LinearProgress";
 
 export const PlaylistsPage = () => {
   const [search, setSearch] = useState("");
@@ -32,15 +31,15 @@ export const PlaylistsPage = () => {
     setCurrentPage(1);
   };
 
-  if (isLoading) return <h1>Skeleton loader...</h1>
+  if (isLoading) return <h1>Skeleton loader...</h1> // СДЕЛАТЬ СКЕЛЕТОН
 
 
   return (
     <div className={s.container}>
       <h1>Playlists page</h1>
-      <CreatePlaylistForm />
+      <CreatePlaylistForm setCurrentPage={setCurrentPage}/>
       <input type="search" placeholder={"Поиск плейлиста по названию"} onChange={searchPlaylistHandler}/>
-      <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading}/>
+      <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading} setCurrentPage={setCurrentPage}/>
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
