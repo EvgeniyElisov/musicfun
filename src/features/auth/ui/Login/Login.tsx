@@ -23,6 +23,7 @@ export const Login = () => {
 
       // Отписываемся от события, чтобы избежать обработки дублирующихся сообщений
       window.removeEventListener("message", receiveMessage);
+      
       login({ code, redirectUri, rememberMe: false });
     };
 
