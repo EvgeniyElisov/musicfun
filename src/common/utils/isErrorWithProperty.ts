@@ -1,5 +1,4 @@
 export function isErrorWithProperty<T extends string>(error: unknown, property: T): error is Record<T, string> {
-  debugger
   return (
     typeof error === 'object' &&
     error != null &&
