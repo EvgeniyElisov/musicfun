@@ -2,20 +2,16 @@ import { useDeletePlaylistMutation } from "@/features/playlists/api/playlistsApi
 import { EditPlaylistForm } from "../EditPlaylistForm";
 import { PlaylistItem } from "../PlaylistItem";
 import s from "./PlaylistsList.module.css";
-import type {
-  PlaylistData,
-  UpdatePlaylistArgs,
-} from "@/features/playlists/api/playlistsApi.types";
+import type { PlaylistData, UpdatePlaylistArgs } from "@/features/playlists/api/playlistsApi.types";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 type Props = {
   playlists: PlaylistData[];
   isPlaylistsLoading: boolean;
-  setCurrentPage?: (page: number) => void
 };
 
-export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }: Props) => {
+export const PlaylistsList = ({ playlists, isPlaylistsLoading }: Props) => {
   const [playlistId, setPlaylistId] = useState<string | null>(null);
 
   const [deletePlaylist] = useDeletePlaylistMutation();
@@ -23,7 +19,7 @@ export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }:
 
   const deletePlaylistHandler = (playlistId: string) => {
     if (confirm("Вы уверены, что хотите удалить плейлист?")) {
-      deletePlaylist(playlistId).unwrap().then(() => setCurrentPage?.(1));
+      deletePlaylist(playlistId);
     }
   };
 
@@ -42,9 +38,7 @@ export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }:
 
   return (
     <div className={s.items}>
-      {!playlists.length && !isPlaylistsLoading && (
-        <h2>Плейлисты не найдены</h2>
-      )}
+      {!playlists.length && !isPlaylistsLoading && <h2>Плейлисты не найдены</h2>}
       {playlists.map((playlist) => {
         const isEditing = playlistId === playlist.id;
         return (
@@ -58,11 +52,7 @@ export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }:
                 setPlaylistId={setPlaylistId}
               />
             ) : (
-              <PlaylistItem
-                playlist={playlist}
-                deletePlaylist={deletePlaylistHandler}
-                editPlaylist={editPlaylistHandler}
-              />
+              <PlaylistItem playlist={playlist} deletePlaylist={deletePlaylistHandler} editPlaylist={editPlaylistHandler} />
             )}
           </div>
         );

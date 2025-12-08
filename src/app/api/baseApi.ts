@@ -6,4 +6,6 @@ export const baseApi = createApi({
   tagTypes: ["Playlist", "Auth"],
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
+  // skipSchemaValidation: process.env.NODE_ENV === "production", - если надо отключить Zod валидацию для 
+  // продакшена (так же можно сделать для отдельных эндпоинтов)
 });
