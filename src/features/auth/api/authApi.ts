@@ -18,7 +18,6 @@ export const authApi = baseApi.injectEndpoints({
         const { data } = await queryFulfilled;
         localStorage.setItem(AUTH_KEYS.accessToken, data.accessToken);
         localStorage.setItem(AUTH_KEYS.refreshToken, data.refreshToken);
-        // Invalidate after saving tokens
         dispatch(authApi.util.invalidateTags(["Auth"]));
       },
     }),
@@ -37,4 +36,4 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMeQuery, useLoginMutation, useLogoutMutation } = authApi;
+export const { useGetMeQuery, useLoginMutation, useLogoutMutation  } = authApi;

@@ -5,3 +5,4 @@ export { trimToMaxLength } from "./trimToMaxLength";
 export { handleErrors } from "./handleErrors";
 export { errorToast } from "./errorToast";
 export { successToast } from "./succesToast";
+export { isTokens } from "./isTokens";
