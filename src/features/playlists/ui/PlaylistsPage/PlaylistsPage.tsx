@@ -13,13 +13,11 @@ export const PlaylistsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
-  const { data, isLoading } = useFetchPlaylistsQuery(
-    {
-      search: debounceSearch,
-      pageNumber: currentPage,
-      pageSize,
-    },
-  );
+  const { data, isLoading } = useFetchPlaylistsQuery({
+    search: debounceSearch,
+    pageNumber: currentPage,
+    pageSize,
+  });
 
   const changePageSizeHandler = (size: number) => {
     setPageSize(size);
@@ -31,15 +29,13 @@ export const PlaylistsPage = () => {
     setCurrentPage(1);
   };
 
-  if (isLoading) return <h1>Skeleton loader...</h1> // СДЕЛАТЬ СКЕЛЕТОН
-
+  if (isLoading) return <h1>Skeleton loader...</h1>; // СДЕЛАТЬ СКЕЛЕТОН
 
   return (
     <div className={s.container}>
       <h1>Playlists page</h1>
-      <CreatePlaylistForm setCurrentPage={setCurrentPage}/>
-      <input type="search" placeholder={"Поиск плейлиста по названию"} onChange={searchPlaylistHandler}/>
-      <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading} setCurrentPage={setCurrentPage}/>
+      <input type="search" placeholder={"Поиск плейлиста по названию"} onChange={searchPlaylistHandler} />
+      <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading} setCurrentPage={setCurrentPage} />
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

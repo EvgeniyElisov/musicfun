@@ -12,7 +12,7 @@ import { useState } from "react";
 type Props = {
   playlists: PlaylistData[];
   isPlaylistsLoading: boolean;
-  setCurrentPage: (page: number) => void
+  setCurrentPage?: (page: number) => void
 };
 
 export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }: Props) => {
@@ -23,7 +23,7 @@ export const PlaylistsList = ({ playlists, isPlaylistsLoading, setCurrentPage }:
 
   const deletePlaylistHandler = (playlistId: string) => {
     if (confirm("Вы уверены, что хотите удалить плейлист?")) {
-      deletePlaylist(playlistId).unwrap().then(() => setCurrentPage(1));
+      deletePlaylist(playlistId).unwrap().then(() => setCurrentPage?.(1));
     }
   };
 

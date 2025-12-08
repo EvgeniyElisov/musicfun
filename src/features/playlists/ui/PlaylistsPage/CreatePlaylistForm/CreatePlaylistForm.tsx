@@ -3,7 +3,7 @@ import type { CreatePlaylistArgs } from "@/features/playlists/api/playlistsApi.t
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 type Props = {
-  setCurrentPage: (page: number) => void;
+  setCurrentPage?: (page: number) => void;
 }
 
 export const CreatePlaylistForm = ({ setCurrentPage } : Props) => {
@@ -15,7 +15,7 @@ export const CreatePlaylistForm = ({ setCurrentPage } : Props) => {
       .unwrap()
       .then(() => {
         reset();
-        setCurrentPage(1)
+        setCurrentPage?.(1)
       });
   };
 
