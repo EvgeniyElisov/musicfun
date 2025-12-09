@@ -8,7 +8,6 @@ export const getSocket = (): Socket => {
       path: "/api/1.0/ws",
       transports: ["websocket"],
     });
-
     socket.on("connect", () => console.log("✅ Connected to server"));
     socket.on("disconnect", () => console.log("❌ Disconnected from server"));
   }

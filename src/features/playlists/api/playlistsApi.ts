@@ -1,7 +1,7 @@
 import { baseApi } from "@/app/api/baseApi";
 import { SOCKET_EVENTS } from "@/common/constants";
 import { imagesSchema } from "@/common/schemas/schemas";
-import { subscribeToEvent } from "@/common/socket/subscribeToEvent";
+import { subscribeToEvent } from "@/common/socket";
 import type { Images } from "@/common/types";
 import { withZodCatch } from "@/common/utils";
 import { playlistCreateResponseSchema, playlistsResponseSchema } from "../model/playlists.schemas";
