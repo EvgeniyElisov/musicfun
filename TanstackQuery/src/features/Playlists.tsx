@@ -3,18 +3,23 @@ import { client } from "../shared/api/client"
 import { useState, type ChangeEvent } from "react"
 import { Pagination } from "../shared/ui/Pagination/Pagination"
 
-export const Playlists = () => {
+type Props = {
+    userId?: string
+  }
+
+export const Playlists = ({ userId }: Props) => {
     const [page, setPage] = useState(1)
     const [search, setSearch] = useState("")
 
     const query = useQuery({
-        queryKey: ["playlists", { page, search }],
+        queryKey: ["playlists", { page, search, userId }],
         queryFn: async ({ signal }) => {
             const response = await client.GET("/playlists", {
                 params: {
                     query: {
                         pageNumber: page,
                         search,
+                        userId,
                     },
                 },
                 // AbortSignal для отмены запроса при размонтировании компонента или при изменении queryKey
