@@ -31,16 +31,3 @@ export const usePlaylistsQuery = (userId: string | undefined, args: UsePlaylists
         },
     })
 }
-
-export const usePlaylistQuery = (playlistId: string | null) => {
-    return useQuery({
-        queryKey: playlistsKeys.detail(playlistId!),
-        queryFn: async () => {
-            const response = await client.GET("/playlists/{playlistId}", {
-                params: { path: { playlistId: playlistId! } },
-            })
-            return response.data!
-        },
-        enabled: !!playlistId,
-    })
-}

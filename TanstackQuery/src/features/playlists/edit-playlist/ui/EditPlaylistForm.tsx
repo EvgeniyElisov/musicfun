@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import type { SchemaUpdatePlaylistRequestPayload } from "../../../../shared/api/schema.ts"
 import { useEffect } from "react"
 import { useMeQuery } from "../../../auth/api/useMeQuery.ts"
-import { usePlaylistQuery } from "../../api/usePlaylistsQuery.ts"
+import { usePlaylistQuery } from "../api/usePlaylistQuery"
 import { useUpdatePlaylistMutation } from "../api/useUpdatePlaylistMutation"
 
 type Props = {
