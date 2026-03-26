@@ -1,35 +1,38 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { client } from "../../../shared/api/client";
-
-export const callbackUrl = 'http://localhost:5173/oauth/callback';
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { client } from "../../../shared/api/client"
+import { authKeys } from "../../../shared/api/keys-factories/authKeysFactory.ts"
+import { localStorageKeys } from "../../../shared/config/localstorageKeys"
+import { oauthConfig } from "../../../shared/config/apiConfig"
 
 export const useLoginMutation = () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: async ({ code }: { code: string }) => {
-            const response = await client.POST('/auth/login', {
+            const response = await client.POST("/auth/login", {
                 body: {
                     code: code,
-                    redirectUri: callbackUrl,
+                    redirectUri: oauthConfig.redirectUri,
                     rememberMe: true,
-                    accessTokenTTL: '1d'
-                }
+                    accessTokenTTL: "1d",
+                },
             })
 
             if (response.error) {
                 throw new Error(response.error.message)
             }
 
-            return response.data;
+            return response.data
         },
         onSuccess: (data: { refreshToken: string; accessToken: string }) => {
-            localStorage.setItem('musicfun-refresh-token', data.refreshToken)
-            localStorage.setItem('musicfun-access-token', data.accessToken)
+            // После логина сохраняем токены и инвалидируем me-запрос,
+            // чтобы все auth-зависимые виджеты сразу получили актуального пользователя.
+            localStorage.setItem(localStorageKeys.refreshToken, data.refreshToken)
+            localStorage.setItem(localStorageKeys.accessToken, data.accessToken)
             queryClient.invalidateQueries({
-                queryKey: ['auth', 'me']
+                queryKey: authKeys.me(),
             })
-        }
+        },
     })
 
     return mutation

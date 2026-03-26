@@ -1,78 +1,70 @@
-// import { useMutation, useQueryClient } from "@tanstack/react-query"
-// import type {
-//     SchemaGetPlaylistsOutput,
-//     SchemaUpdatePlaylistRequestPayload,
-// } from "../../../../shared/api/schema.ts"
-// import { client } from "../../../../shared/api/client.ts"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { client } from "../../../../shared/api/client"
+import { playlistsKeys } from "../../../../shared/api/keys-factories/playlistsKeysFactory"
+import type { SchemaGetPlaylistsOutput, SchemaUpdatePlaylistRequestPayload } from "../../../../shared/api/schema"
 
-// type MutationVariables = SchemaUpdatePlaylistRequestPayload & { playlistId: string }
+type UseUpdatePlaylistMutationArgs = {
+    playlistId: string
+    userId?: string
+    onSuccess?: () => void
+}
 
-// export const useUpdatePlaylistMutation = ({
-//     onSuccess,
-//     onError,
-// }: {
-//     onSuccess?: () => void
-//     onError?: (error: JsonApiErrorDocument) => void
-// }) => {
-//     const queryClient = useQueryClient()
+export const useUpdatePlaylistMutation = ({ playlistId, userId, onSuccess }: UseUpdatePlaylistMutationArgs) => {
+    const queryClient = useQueryClient()
+    const myPlaylistsKey = [...playlistsKeys.myList(), userId]
 
-//     const key = playlistsKeys.myList()
+    return useMutation({
+        mutationFn: async (data: SchemaUpdatePlaylistRequestPayload) => {
+            const response = await client.PUT("/playlists/{playlistId}", {
+                params: { path: { playlistId } },
+                body: {
+                    title: data.title,
+                    description: data.description || null,
+                    tagIds: [],
+                },
+            })
 
-//     return useMutation({
-//         mutationFn: async (variables: MutationVariables) => {
-//             const { playlistId, ...rest } = variables
-//             const response = await client.PUT("/playlists/{playlistId}", {
-//                 params: { path: { playlistId: playlistId } },
-//                 body: { ...rest, tagIds: [] },
-//             })
-//             return response.data
-//         },
-//         onMutate: async (variables: MutationVariables) => {
-//             // Cancel any outgoing refetches
-//             // (so they don't overwrite our optimistic update)
-//             await queryClient.cancelQueries({ queryKey: playlistsKeys.all })
-//             // Snapshot the previous value
-//             const previousMyPlaylists = queryClient.getQueryData(key)
-//             // Optimistically update to the new value
-//             queryClient.setQueryData(key, (oldData: SchemaGetPlaylistsOutput) => {
-//                 return {
-//                     ...oldData,
-//                     data: oldData.data.map((p) => {
-//                         if (p.id === variables.playlistId)
-//                             return {
-//                                 ...p,
-//                                 attributes: {
-//                                     ...p.attributes,
-//                                     description: variables.description,
-//                                     title: variables.title,
-//                                 },
-//                             }
-//                         else return p
-//                     }),
-//                 }
-//             })
+            return response.data
+        },
 
-//             // Return a context with the previous and new todo
-//             return { previousMyPlaylists }
-//         },
-//         // If the mutation fails, use the context we returned above
-//         onError: (error, __: MutationVariables, context) => {
-//             queryClient.setQueryData(key, context!.previousMyPlaylists)
-//             onError?.(error as unknown as JsonApiErrorDocument)
-//         },
-//         onSuccess: () => {
-//             onSuccess?.()
-//         },
-//         // Always refetch after error or success:
-//         onSettled: (_, __, variables: MutationVariables) => {
-//             queryClient.invalidateQueries({
-//                 queryKey: playlistsKeys.lists(),
-//                 refetchType: "all",
-//             })
-//             queryClient.invalidateQueries({
-//                 queryKey: playlistsKeys.detail(variables.playlistId),
-//                 refetchType: "all",
-//             })
-//         },
-//     })
-// }
+        // Optimistic update: UI обновляется мгновенно без ожидания ответа.
+        onMutate: async (newData: SchemaUpdatePlaylistRequestPayload) => {
+            await queryClient.cancelQueries({ queryKey: playlistsKeys.all })
+            const previousMyPlaylists = queryClient.getQueryData(myPlaylistsKey)
+
+            queryClient.setQueryData(myPlaylistsKey, (oldData: SchemaGetPlaylistsOutput) => {
+                return {
+                    ...oldData,
+                    data: oldData.data.map((playlist) =>
+                        playlist.id === playlistId
+                            ? {
+                                  ...playlist,
+                                  attributes: {
+                                      ...playlist.attributes,
+                                      ...newData,
+                                  },
+                              }
+                            : playlist,
+                    ),
+                }
+            })
+
+            return { previousMyPlaylists }
+        },
+
+        onError: (_error, _newData, onMutateResult) => {
+            queryClient.setQueryData(myPlaylistsKey, onMutateResult?.previousMyPlaylists)
+        },
+
+        onSuccess: () => {
+            onSuccess?.()
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries({
+                queryKey: playlistsKeys.all,
+                refetchType: "all",
+            })
+        },
+    })
+}

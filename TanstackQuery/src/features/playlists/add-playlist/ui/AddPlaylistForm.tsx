@@ -1,30 +1,10 @@
 import { useForm } from "react-hook-form"
 import type { SchemaCreatePlaylistRequestPayload } from "../../../../shared/api/schema"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { client } from "../../../../shared/api/client"
+import { useAddPlaylistMutation } from "../api/useAddPlaylistMutation"
 
 export const AddPlaylistForm = () => {
     const { register, handleSubmit } = useForm<SchemaCreatePlaylistRequestPayload>()
-    const queryClient = useQueryClient()
-
-    const { mutate } = useMutation({
-        mutationFn: async (data: SchemaCreatePlaylistRequestPayload) => {
-            const response = await client.POST("/playlists", {
-                body: data,
-            })
-            return response.data
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["playlists"],
-                // refetchType — какие запросы с этим queryKey реально перезапросить:
-                // "active"   — только активные (есть подписчики в UI),
-                // "inactive" — только неактивные (в кэше, но без подписчиков),
-                // "all"      — и активные, и неактивные запросы.
-                refetchType: "all",
-            })
-        },
-    })
+    const { mutate } = useAddPlaylistMutation()
 
     const onSubmit = (data: SchemaCreatePlaylistRequestPayload) => {
         mutate(data)

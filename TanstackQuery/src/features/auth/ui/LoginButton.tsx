@@ -1,7 +1,7 @@
-import { useLoginMutation, callbackUrl } from "../api/useLoginMutation.ts";
+import { useLoginMutation } from "../api/useLoginMutation.ts"
+import { oauthConfig } from "../../../shared/config/apiConfig"
 
 export const LoginButton = () => {
-
     const mutation = useLoginMutation()
 
     const handleOauthMessage = (event: MessageEvent) => {
@@ -21,10 +21,9 @@ export const LoginButton = () => {
     }
 
     const handleLoginClick = () => {
-        console.log('Opening OAuth window with callbackUrl:', callbackUrl)
         window.addEventListener('message', handleOauthMessage)
         window.open(
-            `https://musicfun.it-incubator.app/api/1.0/auth/oauth-redirect?callbackUrl=${callbackUrl}`,
+            `https://musicfun.it-incubator.app/api/1.0/auth/oauth-redirect?callbackUrl=${oauthConfig.redirectUri}`,
             'apihub-oauth2',
             'width=500,height=600'
         )
